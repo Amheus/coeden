@@ -1,0 +1,12 @@
+/.vs
+/Coeden/obj
+/Coeden/bin
+
+*.user
+*.suo
+
+/Coeden/Properties/Settings.settings
+app.config
+
+# Package restore (if using NuGet)
+/packages
