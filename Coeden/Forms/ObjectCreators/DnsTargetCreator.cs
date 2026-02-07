@@ -54,7 +54,7 @@ namespace Coeden.Forms.ObjectCreators
             {
                 Name = textBox_name.Text.Trim(),
                 Type = targetType,
-                Notes = textBox_notes.Text.Trim()
+                Note = textBox_notes.Text.Trim()
             };
 
             this.DialogResult = DialogResult.OK;

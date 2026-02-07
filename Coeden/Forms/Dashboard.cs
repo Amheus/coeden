@@ -30,6 +30,7 @@ namespace Coeden.Forms
             {
                 var item = new ListViewItem(connection.Name);
                 item.Tag = connection;
+                item.SubItems.Add(connection.Note);
                 this.listView_registrars.Items.Add(item);
             }
         }
@@ -39,17 +40,22 @@ namespace Coeden.Forms
             RefreshConnectionsList();
         }
 
-        private void toolStripMenu_connections_viewConnections_Click(object sender, EventArgs e)
+        private void toolStripMenu_connections_createANewConnection_Click(object sender, EventArgs e)
         {
-            var conMgr = new ConnectionsManager();
-            if (conMgr.ShowDialog() == DialogResult.OK)
+            var connectionCreator = new ConnectionCreator();
+            if (connectionCreator.ShowDialog() == DialogResult.OK)
             {
+                _settings.Connections.Add(connectionCreator.CreatedConnection);
+                SettingsManager.SaveSettings(_settings);
                 RefreshConnectionsList();
+                MessageBox.Show("Connection added successfully!", "Success",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
-        private void toolStripMenu_connections_createANewConnection_Click(object sender, EventArgs e)
+        private void toolStripMenu_connections_deleteSelectedConnection_Click(object sender, EventArgs e)
         {
+
         }
 
         private void listView_registrars_SelectedIndexChanged(object sender, EventArgs e)
@@ -373,6 +379,102 @@ namespace Coeden.Forms
             var treeModeForm = new TreeMode();
             treeModeForm.ShowDialog();
             RefreshConnectionsList();
+        }
+
+        private void toolStripMenu_file_saveStateToFile_Click(object sender, EventArgs e)
+        {
+            using (var saveDialog = new SaveFileDialog())
+            {
+                saveDialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
+                saveDialog.DefaultExt = "json";
+                saveDialog.FileName = $"coeden-dump-{DateTime.Now:yyyy-MM-dd}";
+                saveDialog.Title = "Save Settings to File";
+
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var settings = SettingsManager.GetSettings();
+
+                        var json = System.Text.Json.JsonSerializer.Serialize(settings, new System.Text.Json.JsonSerializerOptions
+                        {
+                            WriteIndented = true
+                        });
+
+                        System.IO.File.WriteAllText(saveDialog.FileName, json);
+
+                        MessageBox.Show($"Settings saved successfully to:\n{saveDialog.FileName}", "Success",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Failed to save settings:\n{ex.Message}", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void toolStripMenu_file_loadStateFromFile_Click(object sender, EventArgs e)
+        {
+            using (var openDialog = new OpenFileDialog())
+            {
+                openDialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
+                openDialog.Title = "Load Settings from File";
+
+                if (openDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var confirmResult = MessageBox.Show(
+                            "Loading settings from file will replace your current configuration.\n\nDo you want to continue?",
+                            "Confirm Load",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question);
+
+                        if (confirmResult != DialogResult.Yes)
+                            return;
+
+                        var json = System.IO.File.ReadAllText(openDialog.FileName);
+
+                        var settings = System.Text.Json.JsonSerializer.Deserialize<SettingsWrapper>(json);
+
+                        if (settings == null)
+                        {
+                            MessageBox.Show("Failed to load settings: Invalid file format.", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        SettingsManager.SaveSettings(settings);
+
+                        RefreshConnectionsList();
+
+                        MessageBox.Show($"Settings loaded successfully from:\n{openDialog.FileName}", "Success",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (System.Text.Json.JsonException ex)
+                    {
+                        MessageBox.Show($"Failed to parse settings file:\n{ex.Message}", "Invalid Format",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Failed to load settings:\n{ex.Message}", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void toolStripMenu_file_resetState_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show($"This'll destroy all currently configured dns records within the current state.  This will not directly effect live DNS.", "Reset state?",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+            {
+                SettingsManager.SaveSettings(new SettingsWrapper());
+                RefreshConnectionsList();
+            }
         }
     }
 }

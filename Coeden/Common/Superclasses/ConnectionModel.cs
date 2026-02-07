@@ -9,9 +9,11 @@ namespace Coeden.Common.Superclasses
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
     [JsonDerivedType(typeof(CloudflareConnectionModel), "cloudflare")]
     [JsonDerivedType(typeof(IonosConnectionModel), "ionos")]
+    [JsonDerivedType(typeof(MikroTikConnectionModel), "mikrotik")]
     public abstract class ConnectionModel
     {
         public abstract string Name { get; }
         public List<DomainDetails> Domains { get; set; } = new();
+        public string Note { get; set; } = string.Empty;
     }
 }

@@ -11,7 +11,7 @@ namespace Coeden.Common.Settings
     {
         public required string Name { get; set; }
         public DnsTargetType Type { get; set; }
-        public string Notes { get; set; } = string.Empty;
+        public string Note { get; set; } = string.Empty;
         public List<DnsRecord> DnsRecords { get; set; } = new();
     }
 }

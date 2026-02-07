@@ -30,9 +30,14 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             toolStrip1 = new ToolStrip();
+            toolStripMenu_file = new ToolStripDropDownButton();
+            toolStripMenu_file_saveStateToFile = new ToolStripMenuItem();
+            toolStripMenu_file_loadStateFromFile = new ToolStripMenuItem();
+            toolStripMenu_file_resetState = new ToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
             toolStripMenu_connections = new ToolStripDropDownButton();
-            toolStripMenu_connections_viewConnections = new ToolStripMenuItem();
             toolStripMenu_connections_createANewConnection = new ToolStripMenuItem();
+            toolStripMenu_connections_deleteSelectedConnection = new ToolStripMenuItem();
             toolStripMenu_domains = new ToolStripDropDownButton();
             toolStripMenu_connections_createANewDomain = new ToolStripMenuItem();
             toolStripMenu_connections_deletedSelectedDomain = new ToolStripMenuItem();
@@ -46,6 +51,7 @@
             toolStripMenu_treeMode = new ToolStripButton();
             listView_registrars = new ListView();
             columnHeader_name = new ColumnHeader();
+            columnHeader_note = new ColumnHeader();
             listView_domains = new ListView();
             columnHeader_domainName = new ColumnHeader();
             listView_dnsRecords = new ListView();
@@ -62,36 +68,72 @@
             // 
             // toolStrip1
             // 
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenu_connections, toolStripMenu_domains, toolStripMenu_targets, toolStripMenu_dnsRecords, toolStripSeparator1, toolStripMenu_treeMode });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenu_file, toolStripSeparator2, toolStripMenu_connections, toolStripMenu_domains, toolStripMenu_targets, toolStripMenu_dnsRecords, toolStripSeparator1, toolStripMenu_treeMode });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(1734, 25);
+            toolStrip1.Size = new Size(1984, 25);
             toolStrip1.TabIndex = 2;
             toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripMenu_file
+            // 
+            toolStripMenu_file.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            toolStripMenu_file.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenu_file_saveStateToFile, toolStripMenu_file_loadStateFromFile, toolStripMenu_file_resetState });
+            toolStripMenu_file.Image = (Image)resources.GetObject("toolStripMenu_file.Image");
+            toolStripMenu_file.ImageTransparentColor = Color.Magenta;
+            toolStripMenu_file.Name = "toolStripMenu_file";
+            toolStripMenu_file.Size = new Size(38, 22);
+            toolStripMenu_file.Text = "File";
+            // 
+            // toolStripMenu_file_saveStateToFile
+            // 
+            toolStripMenu_file_saveStateToFile.Name = "toolStripMenu_file_saveStateToFile";
+            toolStripMenu_file_saveStateToFile.Size = new Size(179, 22);
+            toolStripMenu_file_saveStateToFile.Text = "Save State to File";
+            toolStripMenu_file_saveStateToFile.Click += toolStripMenu_file_saveStateToFile_Click;
+            // 
+            // toolStripMenu_file_loadStateFromFile
+            // 
+            toolStripMenu_file_loadStateFromFile.Name = "toolStripMenu_file_loadStateFromFile";
+            toolStripMenu_file_loadStateFromFile.Size = new Size(179, 22);
+            toolStripMenu_file_loadStateFromFile.Text = "Load State from File";
+            toolStripMenu_file_loadStateFromFile.Click += toolStripMenu_file_loadStateFromFile_Click;
+            // 
+            // toolStripMenu_file_resetState
+            // 
+            toolStripMenu_file_resetState.Name = "toolStripMenu_file_resetState";
+            toolStripMenu_file_resetState.Size = new Size(179, 22);
+            toolStripMenu_file_resetState.Text = "Reset State";
+            toolStripMenu_file_resetState.Click += toolStripMenu_file_resetState_Click;
+            // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(6, 25);
             // 
             // toolStripMenu_connections
             // 
             toolStripMenu_connections.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            toolStripMenu_connections.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenu_connections_viewConnections, toolStripMenu_connections_createANewConnection });
+            toolStripMenu_connections.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenu_connections_createANewConnection, toolStripMenu_connections_deleteSelectedConnection });
             toolStripMenu_connections.Image = (Image)resources.GetObject("toolStripMenu_connections.Image");
             toolStripMenu_connections.ImageTransparentColor = Color.Magenta;
             toolStripMenu_connections.Name = "toolStripMenu_connections";
             toolStripMenu_connections.Size = new Size(87, 22);
             toolStripMenu_connections.Text = "Connections";
             // 
-            // toolStripMenu_connections_viewConnections
-            // 
-            toolStripMenu_connections_viewConnections.Name = "toolStripMenu_connections_viewConnections";
-            toolStripMenu_connections_viewConnections.Size = new Size(209, 22);
-            toolStripMenu_connections_viewConnections.Text = "View Connections";
-            toolStripMenu_connections_viewConnections.Click += toolStripMenu_connections_viewConnections_Click;
-            // 
             // toolStripMenu_connections_createANewConnection
             // 
             toolStripMenu_connections_createANewConnection.Name = "toolStripMenu_connections_createANewConnection";
-            toolStripMenu_connections_createANewConnection.Size = new Size(209, 22);
+            toolStripMenu_connections_createANewConnection.Size = new Size(219, 22);
             toolStripMenu_connections_createANewConnection.Text = "Create a New Connection";
             toolStripMenu_connections_createANewConnection.Click += toolStripMenu_connections_createANewConnection_Click;
+            // 
+            // toolStripMenu_connections_deleteSelectedConnection
+            // 
+            toolStripMenu_connections_deleteSelectedConnection.Name = "toolStripMenu_connections_deleteSelectedConnection";
+            toolStripMenu_connections_deleteSelectedConnection.Size = new Size(219, 22);
+            toolStripMenu_connections_deleteSelectedConnection.Text = "Delete Selected Connection";
+            toolStripMenu_connections_deleteSelectedConnection.Click += toolStripMenu_connections_deleteSelectedConnection_Click;
             // 
             // toolStripMenu_domains
             // 
@@ -182,13 +224,13 @@
             // 
             // listView_registrars
             // 
-            listView_registrars.Columns.AddRange(new ColumnHeader[] { columnHeader_name });
+            listView_registrars.Columns.AddRange(new ColumnHeader[] { columnHeader_name, columnHeader_note });
             listView_registrars.Dock = DockStyle.Left;
             listView_registrars.FullRowSelect = true;
             listView_registrars.Location = new Point(0, 25);
             listView_registrars.MultiSelect = false;
             listView_registrars.Name = "listView_registrars";
-            listView_registrars.Size = new Size(265, 936);
+            listView_registrars.Size = new Size(400, 936);
             listView_registrars.TabIndex = 2;
             listView_registrars.UseCompatibleStateImageBehavior = false;
             listView_registrars.View = View.Details;
@@ -197,14 +239,19 @@
             // columnHeader_name
             // 
             columnHeader_name.Text = "Registrar Name";
-            columnHeader_name.Width = 200;
+            columnHeader_name.Width = 150;
+            // 
+            // columnHeader_note
+            // 
+            columnHeader_note.Text = "Note";
+            columnHeader_note.Width = 200;
             // 
             // listView_domains
             // 
             listView_domains.Columns.AddRange(new ColumnHeader[] { columnHeader_domainName });
             listView_domains.Dock = DockStyle.Left;
             listView_domains.FullRowSelect = true;
-            listView_domains.Location = new Point(265, 25);
+            listView_domains.Location = new Point(400, 25);
             listView_domains.MultiSelect = false;
             listView_domains.Name = "listView_domains";
             listView_domains.Size = new Size(265, 936);
@@ -223,10 +270,10 @@
             listView_dnsRecords.Columns.AddRange(new ColumnHeader[] { columnHeader_dnsRecords_type, columnHeader_dnsRecords_host, columnHeader_dnsRecords_value, columnHeader_dnsRecords_ttl });
             listView_dnsRecords.Dock = DockStyle.Fill;
             listView_dnsRecords.FullRowSelect = true;
-            listView_dnsRecords.Location = new Point(905, 25);
+            listView_dnsRecords.Location = new Point(1040, 25);
             listView_dnsRecords.MultiSelect = false;
             listView_dnsRecords.Name = "listView_dnsRecords";
-            listView_dnsRecords.Size = new Size(829, 936);
+            listView_dnsRecords.Size = new Size(944, 936);
             listView_dnsRecords.TabIndex = 4;
             listView_dnsRecords.UseCompatibleStateImageBehavior = false;
             listView_dnsRecords.View = View.Details;
@@ -256,7 +303,7 @@
             listView_targets.Columns.AddRange(new ColumnHeader[] { columnHeader_targets, columnHeader_type, columnHeader_totalRecords });
             listView_targets.Dock = DockStyle.Left;
             listView_targets.FullRowSelect = true;
-            listView_targets.Location = new Point(530, 25);
+            listView_targets.Location = new Point(665, 25);
             listView_targets.MultiSelect = false;
             listView_targets.Name = "listView_targets";
             listView_targets.Size = new Size(375, 936);
@@ -284,7 +331,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1734, 961);
+            ClientSize = new Size(1984, 961);
             Controls.Add(listView_dnsRecords);
             Controls.Add(listView_targets);
             Controls.Add(listView_domains);
@@ -303,7 +350,6 @@
 
         private ToolStrip toolStrip1;
         private ToolStripDropDownButton toolStripMenu_connections;
-        private ToolStripMenuItem toolStripMenu_connections_viewConnections;
         private ToolStripMenuItem toolStripMenu_connections_createANewConnection;
         private ListView listView_registrars;
         private ColumnHeader columnHeader_name;
@@ -329,5 +375,12 @@
         private ToolStripMenuItem toolStripMenu_targets_deleteSelectedTarget;
         private ColumnHeader columnHeader_type;
         private ColumnHeader columnHeader_totalRecords;
+        private ToolStripDropDownButton toolStripMenu_file;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem toolStripMenu_file_saveStateToFile;
+        private ToolStripMenuItem toolStripMenu_file_loadStateFromFile;
+        private ColumnHeader columnHeader_note;
+        private ToolStripMenuItem toolStripMenu_file_resetState;
+        private ToolStripMenuItem toolStripMenu_connections_deleteSelectedConnection;
     }
 }
