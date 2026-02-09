@@ -131,8 +131,8 @@ namespace Coeden.Forms
             // manual DNS records
             foreach (var record in selectedTarget.DnsRecords)
             {
-                var item = new ListViewItem(record.Host);
-                item.SubItems.Add(record.Type.ToString());
+                var item = new ListViewItem(record.Type.ToString());
+                item.SubItems.Add(record.Host);
                 item.SubItems.Add(record.Value);
                 item.SubItems.Add(record.TTL.ToString());
                 item.Tag = record;
@@ -143,8 +143,8 @@ namespace Coeden.Forms
             var treeRecords = GetTreeGeneratedRecords(selectedDomain, selectedTarget);
             foreach (var record in treeRecords)
             {
-                var item = new ListViewItem(record.Host);
-                item.SubItems.Add(record.Type.ToString());
+                var item = new ListViewItem(record.Type.ToString());
+                item.SubItems.Add(record.Host);
                 item.SubItems.Add(record.Value);
                 item.SubItems.Add(record.TTL.ToString());
                 item.SubItems.Add("[Tree]");
